@@ -15,7 +15,6 @@ object DbSettings {
 
 fun initDatasource() {
     DbSettings.db
-    // print sql to std-out
     transaction {
         addLogger(StdOutSqlLogger)
         SchemaUtils.create(Urls)
