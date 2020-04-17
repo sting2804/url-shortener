@@ -7,6 +7,7 @@ import com.example.utils.extractUrl
 import com.example.utils.parseParams
 import findOriginalUrlByShort
 import saveAndGetShort
+import java.security.InvalidParameterException
 
 fun main(args: Array<String>) {
     initDatasource()
@@ -15,14 +16,26 @@ fun main(args: Array<String>) {
     val keyword = extractKeyword(params)
     val shortUrl = extractShortUrl(params)
 
-    println("Original URL param: $originalUrl")
+    println("Url to shorting: $originalUrl")
     println("Keyword param: $keyword")
     println("Short url param: $shortUrl")
     println()
 
-    if (shortUrl != null)
-        findOriginalUrlByShort(shortUrl)
-    else saveAndGetShort(originalUrl, keyword)
+    if (shortUrl != null) {
+        try {
+            val searchableUrl = findOriginalUrlByShort(shortUrl)
+            println("Original URL: $searchableUrl")
+        } catch (e: InvalidParameterException) {
+            println(e.message)
+        }
+    } else {
+        try {
+            val saveAndGetShort = saveAndGetShort(originalUrl, keyword)
+            println("Short URL: $saveAndGetShort")
+        } catch (e: IllegalStateException){
+            println(e.message)
+        }
+    }
 }
 
 

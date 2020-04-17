@@ -1,36 +1,41 @@
 import com.example.model.UrlEntity
 import com.example.model.Urls
 import org.jetbrains.exposed.sql.SizedIterable
-import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.or
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.security.InvalidParameterException
 
 private const val SHORT_URL = "https://short.en/"
 
-fun saveAndGetShort(originalUrl: String, keyword: String) {
-    transaction {
+@Throws(IllegalStateException::class)
+fun saveAndGetShort(originalUrl: String, keyword: String): String {
+    return transaction {
         val urls = findAllUrlsByKeywordAndOriginalUrl(keyword, originalUrl)
-        val url = if (urls.empty())
+        if (urls.empty())
             UrlEntity.new {
                 this.originalUrl = originalUrl
                 this.keyword = keyword
             } else urls.first()
-
-        println("Short URl: ${SHORT_URL + url.keyword}")
+    }.let {
+        SHORT_URL + it.keyword
     }
 }
 
-fun findOriginalUrlByShort(shortUrl: String) {
-    transaction {
-        val urls = findAllUrlsByKeyword(shortUrl.substringAfterLast('/'))
-
-        println("Original URl: ${urls.firstOrNull()?.originalUrl}")
-    }
+@Throws(InvalidParameterException::class)
+fun findOriginalUrlByShort(shortUrl: String): String {
+    return transaction {
+        findAllUrlsByKeyword(shortUrl.substringAfterLast('/'))
+    }.originalUrl
 }
 
-private fun findAllUrlsByKeyword(keyword: String): SizedIterable<UrlEntity> {
+@Throws(InvalidParameterException::class)
+private fun findAllUrlsByKeyword(keyword: String): UrlEntity {
     return UrlEntity.find {
         Urls.keyword eq keyword
+    }.let {
+        if (it.empty())
+            throw InvalidParameterException("No urls found by the keyword $keyword")
+        else it.first()
     }
 }
 
