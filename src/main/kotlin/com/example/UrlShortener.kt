@@ -12,16 +12,12 @@ import java.security.InvalidParameterException
 fun main(args: Array<String>) {
     initDatasource()
     val params = parseParams(args)
-    val originalUrl = extractUrl(params)
-    val keyword = extractKeyword(params)
     val shortUrl = extractShortUrl(params)
 
-    println("Url to shorting: $originalUrl")
-    println("Keyword param: $keyword")
-    println("Short url param: $shortUrl")
-    println()
-
     if (shortUrl != null) {
+        println("Short url param: $shortUrl")
+        println()
+
         try {
             val searchableUrl = findOriginalUrlByShort(shortUrl)
             println("Original URL: $searchableUrl")
@@ -29,13 +25,21 @@ fun main(args: Array<String>) {
             println(e.message)
         }
     } else {
+        val originalUrl = extractUrl(params)
+        val keyword = extractKeyword(params)
+        println("Url to shorting: $originalUrl")
+        println("Keyword param: $keyword")
+        println()
+
         try {
             val saveAndGetShort = saveAndGetShort(originalUrl, keyword)
             println("Short URL: $saveAndGetShort")
-        } catch (e: IllegalStateException){
+        } catch (e: IllegalStateException) {
             println(e.message)
         }
     }
+
+
 }
 
 
