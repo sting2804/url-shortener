@@ -50,7 +50,7 @@ fun extractUrl(argsMap: List<Map<String, String>>): String {
         try {
             parseUrl(it).toString()
         } catch (e: Exception) {
-            throw InvalidParameterException("Original URL has bad format.")
+            throw InvalidParameterException("Original URL has bad format")
         }
     }
         ?: throw InvalidParameterException("Required parameter 'Original URL' not specified")

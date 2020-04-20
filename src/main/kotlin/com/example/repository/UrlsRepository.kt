@@ -29,7 +29,7 @@ fun findOriginalUrlByShort(shortUrl: String): String {
 }
 
 @Throws(InvalidParameterException::class)
-private fun findAllUrlsByKeyword(keyword: String): UrlEntity {
+fun findAllUrlsByKeyword(keyword: String): UrlEntity {
     return UrlEntity.find {
         Urls.keyword eq keyword
     }.let {
