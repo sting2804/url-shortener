@@ -61,7 +61,7 @@ fun extractKeyword(argsMap: List<Map<String, String>>): String {
         ?: generateKeyword()
 }
 
-private fun generateKeyword(): String {
+fun generateKeyword(): String {
     return (1..RANDOM_KEYWORD_LENGTH)
         .map { kotlin.random.Random.nextInt(0, charPool.size) }
         .map(charPool::get)

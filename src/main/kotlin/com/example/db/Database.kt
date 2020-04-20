@@ -7,6 +7,7 @@ import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.transaction
 
+
 object DbSettings {
     val db by lazy {
         Database.connect("jdbc:h2:~/file/db", driver = "org.h2.Driver")

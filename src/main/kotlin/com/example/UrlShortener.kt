@@ -10,6 +10,18 @@ import saveAndGetShort
 import java.security.InvalidParameterException
 
 fun main(args: Array<String>) {
+    startUrlShorting(args)
+
+    try {
+        println(startUrlShorting(args))
+    } catch (e: InvalidParameterException) {
+        println(e.message)
+    } catch (e: IllegalStateException) {
+        println(e.message)
+    }
+}
+
+fun startUrlShorting(args: Array<String>): String {
     initDatasource()
     val params = parseParams(args)
     val originalUrl = extractUrl(params)
@@ -21,20 +33,13 @@ fun main(args: Array<String>) {
     println("Short url param: $shortUrl")
     println()
 
-    if (shortUrl != null) {
-        try {
-            val searchableUrl = findOriginalUrlByShort(shortUrl)
-            println("Original URL: $searchableUrl")
-        } catch (e: InvalidParameterException) {
-            println(e.message)
-        }
+    return if (shortUrl != null) {
+        val searchableUrl = findOriginalUrlByShort(shortUrl)
+        "Original URL: $searchableUrl"
+
     } else {
-        try {
-            val saveAndGetShort = saveAndGetShort(originalUrl, keyword)
-            println("Short URL: $saveAndGetShort")
-        } catch (e: IllegalStateException){
-            println(e.message)
-        }
+        val saveAndGetShort = saveAndGetShort(originalUrl, keyword)
+        "Short URL: $saveAndGetShort"
     }
 }
 
